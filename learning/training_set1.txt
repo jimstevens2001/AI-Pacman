@@ -1,0 +1,12 @@
+{
+	'games_count': 0,
+	'gamma': 0.99999,
+	'epsilon_params': 
+	{
+		'max_value': 0.1,
+		'convergence_rate': 0.5,
+		'repeat_number': 1000000
+	},
+	'qvals': {},
+	'times': {}
+}

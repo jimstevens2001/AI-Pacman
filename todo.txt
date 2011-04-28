@@ -1,0 +1,286 @@
+#############################################################################
+# To Do                                                                     #
+#############################################################################
+
+Neural Net project:
+##Move Pacman folder to another folder in hthreadCompiler repo
+##Make a branch of the current Pacman system to keep the 749 version around
+##Make a python neural net library
+	##Find the old NN program
+	##Study the code to understand how it works
+	##Neural Network class
+		##Create a build_net function that takes a triple (input, hidden, output)
+		##Create a train function
+		##Create a feed_forward function
+	##Test with previous class projects (works but has overflow issues)
+	##Fix overflow issues
+	##read http://en.wikipedia.org/wiki/Artificial_neural_network#Reinforcement_learning
+	##check out On-Line Learning in Neural Networks (it looks worthless)
+	##Code review NN.py
+	##Modify the system so it can do online training (keep track of iterations, etc.)
+	##Consider using 
+		##http://sourceforge.net/projects/pylibneural/ (nah)
+		##http://leenissen.dk/fann/html/files2/installation-txt.html (nah)
+		##SciPy to fix precision issues in our implementation
+	##Finalize NN code (essential fixes only)
+		##get rid of dsigmoid altogether (can replace with o_i*(1-o_i))
+		##make sure sigmoid function does not overflow by using if statements
+		##fix bug related to using o_j instead of net_j when calling dsigmoid (not bothering, going to stick with o_i*(1-o_i))
+		##make eta small (this is because we are adjusting weights after each pattern, see pg 128 of handout)
+##create ai_pacman_nn file (make it work the same as functino approx for now)
+##integrate ai_pacman_nn into main (use 'neuralnet' as the mode name)
+##look for other places where the system has to change
+##test to make sure it works with neuralnet option
+##change ai_pacman.py to ai_pacman_approx.py (or funcaprox or something appropriate)
+##change 'training_mode' to 'ai_mode' in config file
+
+##reread handout from chakrabarti on FANN
+##http://en.wikipedia.org/wiki/Q_learning#Algorithm
+##http://en.wikipedia.org/wiki/Radial_basis_function_network
+##scan AI: A modern approach chapters on RL and NN
+##scan RL book on using NN in RL
+##read http://www.willamette.edu/~gorr/classes/cs449/intro.html
+##read http://www.research.ibm.com/infoecon/paps/html/ijcai99_qnn/node5.html
+
+##methods for discretizing system
+	##have an output for each component of the reward (going with this one first)
+	##have an output for qval ranges (one high at a time or multiple high at a time)
+	##turn it into a number (8, 16, 32 bit)
+	##use a linear output node like in the IBM paper
+
+
+##modify ai_pacman_nn to actually use neural net toolkit (start with current features)
+	##four neural nets will be created (one for each direction)
+	##need to specify learning file format
+		##INUM, HNUM, ONUM
+		##each learning file is going to need all of the weights for each of the four neural nets
+		##each NN consists of a set of weights
+	#load/save training data needs to work with new format
+	#	handle uninitialized case
+	##compute_qval(self, action) will call feed_forward
+	##change stuff starting at line 367 to call train
+		##basically need to compute new qval using classic qval update equation and then backpropagate the value through
+		##		for feature in self.prev_features.keys():
+		##			if cur_reward[1] in feature:
+		##				self.theta[feature][self.prev_action] += (cur_reward[0] + (self.gamma * max_qval) - last_qval) \
+		##						* (self.prev_features[feature] / (self.times[self.prev_action] + 1.0))
+
+##BUG FIX: changed HIGH and LOW to be 10,000 and -10,000 respectively
+
+##test neural net version and hope it rocks (IT DID NOT)
+##Make a list of parameters for the system (it is below in this file)
+
+##fix last_qval bug
+	##not using last qval for that action (not a bug, i found where it is updated)
+##print a feed forward result immediatiately after network is trained
+	##compare to training pair
+
+##figure out why the prev_features list is not all 0s when the system starts
+##test the nn_lib to make sure it work floating point numbers
+
+##make sure the ghost distance feature is properly implemented
+	##some times it seems to wait until the ghost is much closer than three tiles
+	##this will cause MAJOR problems
+##Options for fixing system if Chakrabarti's method for online NN training does not work (not bothering)
+	##1. have a buffer of last N samples and train with those samples
+	##2. collect samples and train offline
+
+
+##modify the Q-value discretation code to use the "threshold" scheme for neurons
+##modify nn.py to have a bias weight.
+
+##make another nn_lib that has one output that is scaled between 0 and 1
+	##it didn't seem to change much
+	##this won't be good because of the sigmoid on the output node
+	##we would have to use a linear output node to fix that problem
+##read http://www.acm.uiuc.edu/sigart/docs/QLearning.pdf
+##read http://www.acm.uiuc.edu/sigart/docs/NeuralNetworkPresentation.pdf
+	##called updating after each sample "Stochastic Gradient Descent"
+	##said that eta must approach 0 for it to converge to a local minima
+
+##update the nn.py library to have the following features
+	##arbitrary number of hidden layers
+	##selectable output layer activation function (sigmoid or linear)
+	##sigmoid function will be scaled between -1 and 1 instead of 0 and 1
+	##modify the train function to take a list of samples, rather than a single sample
+##modify nn.py to use multilayer networks. take a list of integers for the number of hidden nodes in each hidden layer.
+	##this will probably require a redesign of how the neurons for each layer are stored
+	##the code needs to be redesigned anyways :)
+	##i can start by making useful functions to get rid of crap like "i + self.HNUM + self.INUM" and 
+		##then replace the data structures after they are hidden by the functions
+
+##test linear output for q-value without scaling
+	##overflowed!
+
+##test the AI with two hidden layers and a single linear output node that approximates the q-value
+	##the system works without crashing, but it seems that the weights of the are not changing in
+		##response to the training vectors
+	##it also seems that since the q-learning part of the system is doing a running averager, the
+		##q-values converge to what the neural nets outputs are rather than the other way around
+	##investigate this further
+		maybe it is worth not doing the running averager any more for q-learning
+		also, keeping around the last N training samples and rerunning them through might be worthwhile
+		review the update equations for NNs and think about how many samples are needed to get the network to change
+			may want to read more about online NN training
+			also make sure i have this implemented properly
+		make sure that i am doing scaling properly (do i even need to scale the output?)
+
+##Code review nn.py
+##Code review ai_pacman_nn.py
+
+##make a separate features.py file for the nn
+##rename features.py to features_approx.py or something appropriate
+
+##test the NN library by approximating linear functions
+	##it is possible bugs or something else are causing the weights to want to stay constant
+##run the NNs for each action by itself (not doing)
+	##i.e. present a feature vector and see how it is working
+
+##study the output of the debug code in ai_pacman_nn when pacman dies
+	##try to figure out how the RL and NN work together to result in certain Q-Values
+
+##Reading:
+	##read http://www.tdx.cesca.es/TESIS_UdG/AVAILABLE/TDX-0114104-123825//tmcp3de3.pdf
+
+##Bugs:
+	##fix issue with coordinates that is in features*.py
+	#maze ghosts has a bug that the ghosts sometimes dissapear (i.e distance == 1.0) when they are really close
+	##I saw and A* fail error still 4/7/08 3:15 am - Adam start: (0,176) goal: (-16, 176)
+		##Fixed out_of_bounds() to not have 0 be out of bounds
+		##Fixed astar() to set self.goal = goal after goal was normalized to a tile
+
+##Code Improvements:
+	Study the code to figure out how to turn the 4 NNs into one that is generalized (relative directions)
+	##Batch Training
+		##Change the NN training to work with a buffer of state action pairs
+		##Should learn faster
+
+Features:
+	##add maze pellet feature inside of his sight range. 
+		##This should help pacman learn to find pellets in the maze.
+		##Binary pellets will get him close, maze pellets will make him awesome
+	##Super binary pellets
+		Only do A* to the 3 closest pellets within SIGHT_DISTANCE
+	Power Pellets
+		Super binary power pellets
+	Mess with maze ghosts?
+		this only tells the first direction to a dangerous ghost and doesn't consider outs (safe routes) on that same path
+	Vulnerable ghosts with time left for each one
+	Eyes near the middle
+	5x5 full view
+	Clear Paths
+		Draw a circle of size n around pacman. Eliminate all walls and out of bounds locations. Call pathfinder to get paths to each location
+		Can then use the path to see if it crosses ghosts, how far away each path location is from a ghost, which paths cross pellets, etc.
+		Find a way to evaluate each direction
+	Ghost density in each direction (within some manhatten distance window)
+		-1 = 0
+		0 = 1
+		1 = 2-4
+	Normalized distance to wall
+		Gives agent an idea of how much freedom he has in each direction.
+		Would like to take maze into account, but that gets tricky fast
+	##Normalized manhatten distance to closest ghost (in each direction)
+	##	gives an idea of where the ghosts are relative to pacman
+	Current direction (4 features that are binary)
+
+##Results Mode:
+	##make sure results mode turns off learning and exploration
+	##add variance calculation (not doing)
+	##make sure we take really good statistical measurements this time
+
+##Measurements:
+	##Retrain function approximation and take good measurements
+	##Take multiple runs with the NN and use the best one since each time the NN starts randomly
+	##Test by comparing to previous version
+
+##Finalize parameters
+	##number of training iterations (10m for final system)
+	##q-learning vs. sarsa = Q-Learning wins
+	##buffer size (5 or 1) = 5 wins
+	##HNUM (8 or 16) = 8 wins
+	##gamma (0.2 or 0)
+	##NN learning rate (0.1)
+
+##Make a list of tests to run
+##Runs tests
+
+Clean up code base
+	remove hw 3 stuff, adder, etc.
+
+##Report:
+	##Change the background section. It talks about patterns for strategies and that doesn't apply to us.
+	##Citations
+		##Get citations for new content
+		##Make citations go in order and match up correctly
+	##Figures
+		##Get new figures in there
+		##Make figure numbers go in order
+		##Make text match the corresponding figure
+	##Section 4
+		##talk about the parameters
+	##Results
+		##vary the ghost difficulty
+
+
+
+
+---------------------------------
+Non-vital changes
+
+High Priority:
+Move the number of GHOSTS from common.py to the config files
+Put SIGHT_DISTANCE into a config file?
+Update the pause code so it does not busy wait
+	Maybe do use a Python key interrupt or something
+Implement a dirty list technique to make screen updates more efficient
+Update ghost decision code to make movement changes based on a probability
+
+
+Lower Priority:
+Change where level is displayed on the board so it doesn't cover up parts of the board
+Have a minimum window size to ensure status does not overlap
+Add fruits
+Change score for eating ghosts to be 200, 400, 800, 1600 like the real game instead of always 200
+Change ghost speed to work closer to the way the real game works
+Modify system to work with an arbitrary number of ghosts
+Add sound effects
+
+--------------------
+Parameters of our learning system
+
+output format (unsigned number or threshold or linear node)
+HI/LOW (if using discrete output)
+ONUM
+HNUM
+feature set (determines INUM)
+	SIGHT_DISTANCE
+reward function
+policy
+gamma
+epsilon
+NN learning rate
+RL learning rate (currently 1/(numgames + 1) (does not matter anymore)
+ghost behavior
+	ghost difficulty (0-1)
+	ghost pattern (T/F)
+number of training iterations
+boards used in training and testing
+consider using a bias weight for each neuron
+tolerance (in nn_lib_level) for if an output value is high
+buffer size
+q-learning vs. sarsa
+
+##--------------------
+##03/26 meeting
+
+##Go over the tasklist that we have with Chakrabarti
+##Show the 749 version of the game to Chakrabarti
+
+##Limitations:
+##Want to make sure this project is not too big or too small
+
+##How are we going to compare
+##	based on score
+
+##Turn in a periodic progress report to keep him updated
+

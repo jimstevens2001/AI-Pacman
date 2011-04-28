@@ -1,0 +1,8 @@
+{   'epsilon_params': {   'convergence_rate': 0.5,
+                          'max_value': 1.0,
+                          'repeat_number': 1},
+    'games_count': 0,
+    'gamma': 0.0,
+    'theta': {},
+    'times': {},
+    'verdict': 'Avoid ghosts fairly well but does not try to eat pellets much'}

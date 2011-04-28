@@ -1,0 +1,75 @@
+###############################################################################
+#                                                                             #
+# Level File Descriptions                                                     #
+#                                                                             #
+###############################################################################
+
+
+
+#------------------------------------------------------------------------------
+# Pac-Man Levels that are fun and playable
+#------------------------------------------------------------------------------
+
+    new_level3.txt - The original Pac-Man level with the EECS 749 banner at the
+                     top
+    new_level1.txt - The original Pac-Man level
+    new_level2.txt
+    new_level4.txt - Large Level
+    new_level5.txt
+    new_level6.txt
+    new_level7.txt
+    new_level8.txt
+    new_level9.txt
+    new_level10.txt - Large Level
+	new_level23.txt - Giant level. Not fully implemented.
+
+
+#------------------------------------------------------------------------------
+# Simple fully functional levels for training
+#------------------------------------------------------------------------------
+
+    new_level11.txt - Medium sized grid level with no Power Pellets
+    new_level12.txt - Same as new_level11.txt only with Power Pellets
+    new_level13.txt - Same as new_level12.txt only with LOTS of Power Pellets
+
+
+
+#------------------------------------------------------------------------------
+# Simple Levels with ghosts trapped in corner. Useful to make sure pac-man is
+# hunting down pellets
+#------------------------------------------------------------------------------
+
+    new_level17.txt - Very small grid. No power-pellets
+    new_level16.txt - Small grid. No power-pellets
+    new_level15.txt - Medium grid. No power-pellets
+    new_level14.txt - Same as new_level15.txt only with power-pellets
+
+
+
+#------------------------------------------------------------------------------
+# Very simple levels with trapped ghosts and few pellets.
+#------------------------------------------------------------------------------
+
+    new_level19.txt - Very small. Two pellets to the right of Pac-Man.
+    new_level24.txt - Very small. Two pellets to the left of Pac-Man.
+    new_level25.txt - Very small. Two pellets below Pac-Man.
+    new_level26.txt - Very small. Two pellets above Pac-Man.
+    new_level34.txt - Very small. One pellet to the right, left, up and down.
+
+    new_level18.txt - Very small. Pellets to the right and up.
+    new_level27.txt - Very small. Pellets to the right and down.
+    new_level28.txt - Very small. Pellets to the left and up.
+    new_level29.txt - Very small. Very simple maze.
+
+    new_level20.txt - Small maze. One path.
+    new_level21.txt - Slightly larger maze than new_level20.txt. One path.
+    new_level22.txt - Slightly larger maze than new_level22.txt. Two paths.
+
+    new_level30.txt - Same as new_level18.txt. Only one pellet at the end of
+                      the maze.
+    new_level31.txt - Same as new_level20.txt. Only one pellet at end.
+    new_level32.txt - Same as new_level21.txt. Only one pellet at end.
+    new_level33.txt - Same as new_level22.txt. Only two pellets at end.
+
+
+

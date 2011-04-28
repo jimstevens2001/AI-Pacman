@@ -1,0 +1,104 @@
+###############################################################################
+#                                                                             #
+# Learning Pac-Man README                                                     #
+#                                                                             #
+###############################################################################
+
+###############################################################################
+#                                                                             #
+# EECS 833 : Final Project - Learning Pac-Man                                 #
+# Date     : 05/12/2008                                                       #
+# Authors  : Adam Smith, Jim Stevens, Fabrice Baijot                          #
+# Version  : 4.0                                                              #
+# Language : Python, version 2.5 and PyGame, version 1.7                      #
+# System   : cycle4.eecs.ku.edu                                               #
+# Site     : Dept. of Electrical Engineering and Computer Science             #
+#            The University of Kansas, Lawrence, KS 66045                     #
+# Web Page : http://people.eecs.ku.edu/~asmith12/pacman                       #
+#                                                                             #
+###############################################################################
+
+
+
+###############################################################################
+# Description                                                                 #
+###############################################################################
+
+This system implements a Pacman system in which Pacman can be be played
+by humans or controlled by an AI agent. The AI agent learns how to play
+the game using reinforcement learning techniques. The game is highly 
+configurable and modular. The primary configuration options are described
+below and further details can be found in the project document.
+
+###############################################################################
+# System Requirements                                                         #
+###############################################################################
+
+Learning Pac-Man is implemented in the cross-platform Python environment.
+It can be used on any platform meeting these requirements:
+
+*Python 2.5 or later (http://www.python.org)
+*PyGame 1.7 or later (http://www.pygame.org)
+
+In addition, the training can be accelerated with the Psyco Just-In-Time
+compiler for Python. We have included a version of Psyco that is compatible
+with Python 2.5 for Linux systems (which is the default on the EECS network).
+To use psyco in another environment, download it from:
+http://psyco.sourceforge.net
+
+
+###############################################################################
+# Usage                                                                       #
+###############################################################################
+
+	> python main.py <config>
+
+The configuration files are stored in the config dictionary with a .txt
+extension.  To use a particular config file, type the file name WITHOUT
+the directory or the .txt extension (e.g. test.txt will be executed as
+"python main.py test").
+
+The configuration files contain a large number of parameters for the
+system. Most of these parameters are relatively static between runs of
+the system. The most important parameters are:
+
+*ai_mode: Set to True if Pac-Man should be an AI agent and False for 
+	a human player.
+
+*graphics_on: Set to True to enable Pygame based graphics and False to 
+	disable graphics.
+
+*training_iterations: The number of iterations of the main loop to 
+	run for the AI agent.
+
+*training_file_start/training_file_end: The files to load/store the training 
+	data for the AI agent.
+
+*difficulty: The probability that the ghosts will turn towards Pac-Man 
+	after each time they make a decision.
+
+*learning_algorithm: The learning algorithm that Pac-Man will use. Valid 
+	methods are "neuralnet", "approximation" and "explict"
+
+
+The following sample configuration files are provided:
+
+human: You can control Pac-Man using the arrow keys.
+
+awesome_nn: A highly trained Pac-Man using neural networks.
+
+super_awesome: Highly trained Pac-Man using linear function approximation.
+
+explicit: Pac-Man trained with explicit state tables (note: he is only 
+	aware of pellets and not ghosts).
+
+im_config: The config file used for the improvement tests. (graphics off)
+
+general_testing: The config file used for the generalization tests. (graphics 
+	off)
+
+
+If you have any questions about this system, please feel free to email
+stevens@ku.edu, smith215@ku.edu, or bricefab@ku.edu.
+
+

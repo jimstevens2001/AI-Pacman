@@ -1,0 +1,38 @@
+###############################################################################
+#
+# Minefield README
+#
+###############################################################################
+
+Minefield Test Program
+
+This simulated an agent learning how to traverse a minefield.
+If the agent steps on a square with a mine, he dies and starts
+over (luckily he remembers his Q-value table from his past life).
+
+An example board is:
+10 10 0 0
+-----#----
+####-##-##
+-----#----
+####-#-##-
+---#---##-
+-#---##---
+-####--###
+------#---
+-#####--#-
+-------#X-
+
+In this case, the agent starts at position (0,0) and must make it
+to the goal at X.
+
+To run the program, type one of the following commands:
+
+python game.py <level> <config>
+
+The level files are in this directory and are numbered L1 through L7. L2
+is the most complicated example.
+
+The config files in this directory are the files that end with a .cfg
+extension. Each of the config files is set up to use a different
+epsilon function for the reinforcement learning algorithm.

@@ -1,0 +1,8 @@
+{   'epsilon_params': {   'convergence_rate': 0.01,
+                          'max_value': 0.1,
+                          'repeat_number': 10000},
+    'games_count': 0,
+    'gamma': 0.2,
+    'neuralnets': {'nc_list':[8,8,1],'af_list':['sig','lin']},
+    'times': {},
+    'verdict': 'Avoid ghosts fairly well but does not try to eat pellets much'}

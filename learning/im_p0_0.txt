@@ -1,0 +1,8 @@
+{ 'epsilon_params': {   'convergence_rate': 0.5,
+                          'max_value': 0.0,
+                          'repeat_number': 1000000},
+    'games_count': 0,
+    'gamma': 0.0,
+    'theta': {},
+    'times': {}}
+    
