@@ -35,12 +35,23 @@ from ecspy import ec
 from ecspy import terminators
 from ecspy import observers
 
+# Constants
+training_iterations = 10000
+results_games = 15
+
+#training_iterations = 10
+#results_games = 2
+
 # Open devnull to redirect subprocess stdout.
 devnull = open('/dev/null', 'w')
 
 # Starting dictionary for NN learning.
 learning_start = 'learning/nn_default.txt'
 config_training = 'config/awesome_nn_train.txt'
+config_results = 'config/awesome_nn.txt'
+
+round_number = 0
+
 
 def read_dict(filename):
 	try:
@@ -65,14 +76,20 @@ def training_file(num):
 	return 'tmp/training_'+str(num)+'.txt'
 def config_file(num):
 	return 'tmp/config_'+str(num)+'.txt'
+def score_file(num):
+	return 'scores/'+str(num)+'.txt'
 
 def generator(random, args):
 	# [gamma]
 	return [random.random()]
 
 def evaluator(candidates, args):
+	global round_number
+	round_number += 1
 
 	# Train the candidate solutions.
+	print 'Round',round_number,'training'
+	sp_list = []
 	for i in range(len(candidates)):
 		# Get parameters
 		cur_gamma = candidates[i][0]
@@ -86,25 +103,47 @@ def evaluator(candidates, args):
 		config_dict = read_dict(config_training)
 		config_dict['training_file_start'] = training_file(i)
 		config_dict['training_file_end'] = training_file(i)
+		config_dict['training_iterations'] = training_iterations
 		write_dict(config_dict, config_file(i))
 
 		# run training mode
+		#p = subprocess.Popen(['python', 'main.py', '../tmp/config_'+str(i)])
+		p = subprocess.Popen(['python', 'main.py', '../tmp/config_'+str(i)], stdout=devnull)
+		sp_list.append(p)
 
 	# wait until everyone is done training
+	for i in range(len(candidates)):
+		p = sp_list[i]
+		p.wait()
 
 	# Run the results collection mode to see how it does.
+	print 'Round',round_number,'results'
+	sp_list = []
 	for i in range(len(candidates)):
 
-		pass
 		# generate config dictionary for results mode, write to file
+		config_dict = read_dict(config_results)
+		config_dict['training_file_start'] = training_file(i)
+		config_dict['score_file'] = score_file(i)
+		config_dict['results_games'] = results_games
+		write_dict(config_dict, config_file(i))
+
 		# run results mode
-		# read score in and place in fitness vector
-	# wait until everyone is done collecting results
+		#p = subprocess.Popen(['python', 'main.py', '../tmp/config_'+str(i)])
+		p = subprocess.Popen(['python', 'main.py', '../tmp/config_'+str(i)], stdout=devnull)
+		sp_list.append(p)
+
+	# wait until everyone is done running results
+	for i in range(len(candidates)):
+		p = sp_list[i]
+		p.wait()
 
 	# Collect the results and put them in the fitness vector.
 	fitness = []
-	for cand in candidates:
-		fitness.append(random.random())
+	for i in range(len(candidates)):
+		# read score in and place in fitness vector
+		score_dict = read_dict(score_file(i))
+		fitness.append(score_dict['score'])
 
 	return fitness
 
