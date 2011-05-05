@@ -63,6 +63,8 @@ def write_dict(dictionary, filename):
 
 def training_file(num):
 	return 'tmp/training_'+str(num)+'.txt'
+def config_file(num):
+	return 'tmp/config_'+str(num)+'.txt'
 
 def generator(random, args):
 	# [gamma]
@@ -84,6 +86,7 @@ def evaluator(candidates, args):
 		config_dict = read_dict(config_training)
 		config_dict['training_file_start'] = training_file(i)
 		config_dict['training_file_end'] = training_file(i)
+		write_dict(config_dict, config_file(i))
 
 		# run training mode
 
