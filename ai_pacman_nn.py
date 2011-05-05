@@ -179,12 +179,28 @@ class Pacman:
 			print 'Games:', self.games_count
 			print 'Average score:', self.average_score
 			print 'Average level:', self.average_level
-			sys.exit(1)
+
+			# Check config dictionary for the score file (this is not a required parameter though).
+			score_file = self.game.manager.config_options.get('score_file', None)
 
 
-#------------------------------------------------------------------------------
-# get_next_move()
-#------------------------------------------------------------------------------
+			if score_file:
+				try: 
+					print 'WRITING TO SCORE FILE:', score_file
+					scoreFile = open(score_file, 'w')
+					score_dict = {'score': self.average_score, 'level': self.average_level}
+					scoreFile.write(str(score_dict))
+					scoreFile.close()
+				except:
+					raise PacmanError('AI Pacman NN: Score output file failed to open.')
+
+
+				sys.exit(1)
+
+
+	#------------------------------------------------------------------------------
+	# get_next_move()
+	#------------------------------------------------------------------------------
 
 	def get_next_move(self):
 		"Sets the next move for Pac-Man"

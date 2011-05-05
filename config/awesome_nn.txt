@@ -60,5 +60,6 @@
 	'ghost_pattern': False,
 	'learning_algorithm': 'neuralnet',
 	'results_mode': True,
-	'results_games': 30
+	'results_games': 30,
+	'score_file': 'scores/1.txt'
 }

@@ -26,15 +26,101 @@
 #
 ###############################################################################
 
-import main
+import subprocess
+import random
+import sys
+import time
 
-result = 0
+from ecspy import ec
+from ecspy import terminators
+from ecspy import observers
 
-def cb(val):
-	global result
-	result = val
+# Open devnull to redirect subprocess stdout.
+devnull = open('/dev/null', 'w')
 
-#main.pacman.register_callback(cb)
-main.main('config/awesome_nn.txt')
-print result
+# Starting dictionary for NN learning.
+learning_start = 'learning/nn_default.txt'
+config_training = 'config/awesome_nn_train.txt'
 
+def read_dict(filename):
+	try:
+		inFile = open(filename, 'r')
+		dictionary = eval(inFile.read())
+		inFile.close()
+		return dictionary
+	except:
+		print 'Failed to read file:',filename
+		sys.exit(1)
+
+def write_dict(dictionary, filename):
+	try:
+		outFile = open(filename, 'w')
+		outFile.write(str(dictionary))
+		outFile.close()
+	except:
+		print 'Failed to write file:',filename
+		sys.exit(1)
+
+def training_file(num):
+	return 'tmp/training_'+str(num)+'.txt'
+
+def generator(random, args):
+	# [gamma]
+	return [random.random()]
+
+def evaluator(candidates, args):
+
+	# Train the candidate solutions.
+	for i in range(len(candidates)):
+		# Get parameters
+		cur_gamma = candidates[i][0]
+
+		# generate learning dictionary, write it to tmp file
+		learn_dict = read_dict(learning_start)
+		learn_dict['gamma'] = cur_gamma
+		write_dict(learn_dict, training_file(i))
+
+		# generate config dictionary (with training mode), write to file
+		config_dict = read_dict(config_training)
+		config_dict['training_file_start'] = training_file(i)
+		config_dict['training_file_end'] = training_file(i)
+
+		# run training mode
+
+	# wait until everyone is done training
+
+	# Run the results collection mode to see how it does.
+	for i in range(len(candidates)):
+
+		pass
+		# generate config dictionary for results mode, write to file
+		# run results mode
+		# read score in and place in fitness vector
+	# wait until everyone is done collecting results
+
+	# Collect the results and put them in the fitness vector.
+	fitness = []
+	for cand in candidates:
+		fitness.append(random.random())
+
+	return fitness
+
+
+#p = subprocess.Popen(['python', 'main.py', 'awesome_nn'], stdout=devnull)
+#p2 = subprocess.Popen(['python', 'main.py', 'awesome_nn'], stdout=devnull)
+#p.wait()
+#p2.wait()
+
+rand = random.Random()
+rand.seed(int(time.time()))
+ga = ec.GA(rand)
+#ga.observer = observers.screen_observer
+ga.terminator = terminators.evaluation_termination
+final_pop = ga.evolve(evaluator=evaluator,
+                      generator=generator,
+                      max_evaluations=1000,
+                      num_elites=1,
+                      pop_size=100,
+                      num_bits=10)
+for ind in final_pop:
+    print(str(ind))
