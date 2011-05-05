@@ -61,16 +61,8 @@ import game_engine, game_state, ai_pacman_approx, ai_pacman_qval, ai_pacman_nn, 
 from common import *
 
 
-if __name__ == "__main__":
 
-	# Attempt to set the name of the config file. This will only fail if the
-	# name of the config file was not passed in on the command line.
-	try:
-		config_file = 'config/'+sys.argv[1]+'.txt'
-	except:
-		print 'Usage: %s <config_file>'%(sys.argv[0])
-		sys.exit(1)
-
+def main(config_file):
 	# Create a state object
 	state = game_state.State()
 
@@ -203,3 +195,15 @@ if __name__ == "__main__":
 			drawer.draw()
 			# This will limit the number of frames per second to 60
 			clock.tick(60)
+
+if __name__ == "__main__":
+
+	# Attempt to set the name of the config file. This will only fail if the
+	# name of the config file was not passed in on the command line.
+	try:
+		config_file = 'config/'+sys.argv[1]+'.txt'
+	except:
+		print 'Usage: %s <config_file>'%(sys.argv[0])
+		sys.exit(1)
+
+	main(config_file)
