@@ -31,16 +31,19 @@ import random
 import sys
 import time
 
+import ecspy
 from ecspy import ec
 from ecspy import terminators
 from ecspy import observers
 
 # Constants
-training_iterations = 10000
-results_games = 15
+population_size = 15
+rounds = 20
+#training_iterations = 1000000
+#results_games = 15
 
-#training_iterations = 10
-#results_games = 2
+training_iterations = 10000
+results_games = 2
 
 # Open devnull to redirect subprocess stdout.
 devnull = open('/dev/null', 'w')
@@ -158,11 +161,21 @@ rand.seed(int(time.time()))
 ga = ec.GA(rand)
 #ga.observer = observers.screen_observer
 ga.terminator = terminators.evaluation_termination
+ga.variator = ecspy.variators.gaussian_mutation
+ga.observer = observers.file_observer
+statsFile = open('tmp/stats.csv', 'w')
+indivFile = open('tmp/indiv.csv', 'w')
 final_pop = ga.evolve(evaluator=evaluator,
                       generator=generator,
-                      max_evaluations=1000,
+                      max_evaluations=population_size * rounds,
                       num_elites=1,
-                      pop_size=100,
-                      num_bits=10)
+                      pop_size=population_size,
+                      num_bits=10,
+                      statistics_file=statsFile,
+                      individuals_file=indivFile)
+
+outputFile = open('result_'+str(training_iterations)+'.txt', 'w')
 for ind in final_pop:
-    print(str(ind))
+	print(str(ind))
+	outputFile.write(str(ind)+'\n')
+outputFile.close()
