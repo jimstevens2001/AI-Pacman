@@ -155,4 +155,4 @@ def hypervolume(pareto_set, reference_point=None):
 
     
     
-generation_plot('tmp/stats.csv', errorbars=True)
+generation_plot('tmp/stats.csv', errorbars=False)

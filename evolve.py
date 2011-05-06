@@ -38,12 +38,21 @@ from ecspy import observers
 
 # Constants
 population_size = 15
-rounds = 20
+rounds = 50
 #training_iterations = 1000000
 #results_games = 15
 
-training_iterations = 10000
+training_iterations = 5000
 results_games = 2
+
+# Bounds for parameters
+HIDDEN_LOW = 1
+HIDDEN_HIGH = 50
+LOWER_BOUNDS = [0,HIDDEN_LOW,0]
+UPPER_BOUNDS = [1,HIDDEN_HIGH,1]
+
+bounds = ecspy.ec.Bounder(LOWER_BOUNDS, UPPER_BOUNDS)
+
 
 # Open devnull to redirect subprocess stdout.
 devnull = open('/dev/null', 'w')
@@ -83,8 +92,8 @@ def score_file(num):
 	return 'scores/'+str(num)+'.txt'
 
 def generator(random, args):
-	# [gamma]
-	return [random.random()]
+	# [gamma, num_hidden, max_epsilon]
+	return [random.random(), random.uniform(HIDDEN_LOW, HIDDEN_HIGH), random.random()]
 
 def evaluator(candidates, args):
 	global round_number
@@ -96,10 +105,20 @@ def evaluator(candidates, args):
 	for i in range(len(candidates)):
 		# Get parameters
 		cur_gamma = candidates[i][0]
+		cur_hidden = int(round(candidates[i][1]))
+		cur_ep_max = candidates[i][2]
+
+		# Apply any additional constraints.
+		if cur_hidden < HIDDEN_LOW:
+			cur_hidden = HIDDEN_LOW
+		if cur_hidden > HIDDEN_LOW:
+			cur_hidden = HIDDEN_HIGH
 
 		# generate learning dictionary, write it to tmp file
 		learn_dict = read_dict(learning_start)
 		learn_dict['gamma'] = cur_gamma
+		learn_dict['neuralnets']['nc_list'][1] = cur_hidden
+		learn_dict['epsilon_params']['max_value'] = cur_ep_max
 		write_dict(learn_dict, training_file(i))
 
 		# generate config dictionary (with training mode), write to file
@@ -167,6 +186,7 @@ statsFile = open('tmp/stats.csv', 'w')
 indivFile = open('tmp/indiv.csv', 'w')
 final_pop = ga.evolve(evaluator=evaluator,
                       generator=generator,
+                      bounder=bounds,
                       max_evaluations=population_size * rounds,
                       num_elites=1,
                       pop_size=population_size,
