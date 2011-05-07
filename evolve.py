@@ -42,12 +42,12 @@ rounds = 50
 #training_iterations = 1000000
 #results_games = 15
 
-training_iterations = 5000
-results_games = 2
+training_iterations = 1000000
+results_games = 15
 
 # Bounds for parameters
 HIDDEN_LOW = 1
-HIDDEN_HIGH = 50
+HIDDEN_HIGH = 25
 LOWER_BOUNDS = [0,HIDDEN_LOW,0]
 UPPER_BOUNDS = [1,HIDDEN_HIGH,1]
 
@@ -186,7 +186,7 @@ statsFile = open('tmp/stats.csv', 'w')
 indivFile = open('tmp/indiv.csv', 'w')
 final_pop = ga.evolve(evaluator=evaluator,
                       generator=generator,
-                      bounder=bounds,
+                      #bounder=bounds,
                       max_evaluations=population_size * rounds,
                       num_elites=1,
                       pop_size=population_size,
